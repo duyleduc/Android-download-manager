@@ -27,56 +27,61 @@ public final class R {
         public static final int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static final int ic_action_overflow=0x7f020000;
-        public static final int ic_launcher=0x7f020001;
+        public static final int delete=0x7f020000;
+        public static final int gradient_bg=0x7f020001;
+        public static final int gradient_bg_hover=0x7f020002;
+        public static final int ic_action_overflow=0x7f020003;
+        public static final int ic_compressed=0x7f020004;
+        public static final int ic_folder=0x7f020005;
+        public static final int ic_image=0x7f020006;
+        public static final int ic_launcher=0x7f020007;
+        public static final int ic_music=0x7f020008;
+        public static final int ic_other=0x7f020009;
+        public static final int ic_pdf=0x7f02000a;
+        public static final int ic_text=0x7f02000b;
+        public static final int ic_video=0x7f02000c;
+        public static final int image_bg=0x7f02000d;
+        public static final int list_selector=0x7f02000e;
+        public static final int url=0x7f02000f;
     }
     public static final class id {
-        public static final int choose=0x7f0a000b;
-        public static final int delete=0x7f0a0018;
-        public static final int download_status=0x7f0a0015;
-        public static final int downloaded_file_selected=0x7f0a0011;
-        public static final int ex_header=0x7f0a0007;
-        public static final int ex_listview_downloaded=0x7f0a0002;
-        public static final int ex_nb_files=0x7f0a0008;
-        public static final int file_downloaded_date=0x7f0a0010;
-        public static final int file_downloaded_infos=0x7f0a000d;
-        public static final int file_downloaded_link=0x7f0a000e;
-        public static final int file_downloading_size=0x7f0a0016;
-        public static final int fileimage=0x7f0a0009;
-        public static final int filename=0x7f0a000a;
-        public static final int filename_downloaded=0x7f0a000f;
-        public static final int filename_downloading=0x7f0a0014;
-        public static final int filetype_downloaded=0x7f0a000c;
-        public static final int image_view_filetype=0x7f0a0012;
+        public static final int add_new_url=0x7f0a000d;
+        public static final int add_url=0x7f0a0011;
+        public static final int bt_cancel_dl=0x7f0a000e;
+        public static final int btn_download_url=0x7f0a000f;
+        public static final int choose=0x7f0a0007;
+        public static final int delete=0x7f0a0010;
+        public static final int download_status=0x7f0a000b;
+        public static final int file_downloading_size=0x7f0a0009;
+        public static final int fileimage=0x7f0a0008;
+        public static final int filename=0x7f0a0006;
+        public static final int filename_downloading=0x7f0a000a;
         public static final int list_directory=0x7f0a0001;
-        public static final int listview_downloading=0x7f0a0004;
-        public static final int listview_queue=0x7f0a0006;
-        public static final int more=0x7f0a0017;
-        public static final int propressbar_download=0x7f0a0013;
-        public static final int view1=0x7f0a0003;
-        public static final int view2=0x7f0a0005;
+        public static final int listview_downloading=0x7f0a0003;
+        public static final int listview_queue=0x7f0a0005;
+        public static final int propressbar_download=0x7f0a000c;
+        public static final int view1=0x7f0a0002;
+        public static final int view2=0x7f0a0004;
         public static final int view_pager=0x7f0a0000;
-        public static final int zip=0x7f0a0019;
     }
     public static final class layout {
         public static final int activity_main_download_manager=0x7f030000;
         public static final int fragment_directory=0x7f030001;
-        public static final int fragment_downloaded_main=0x7f030002;
-        public static final int fragment_downloading=0x7f030003;
-        public static final int header=0x7f030004;
-        public static final int listview_dir_item=0x7f030005;
-        public static final int listview_downloaded_item=0x7f030006;
-        public static final int listview_downloading_item=0x7f030007;
+        public static final int fragment_downloading=0x7f030002;
+        public static final int listview_dir_item=0x7f030003;
+        public static final int listview_downloading_item=0x7f030004;
+        public static final int new_url=0x7f030005;
     }
     public static final class menu {
         public static final int main=0x7f090000;
     }
     public static final class string {
         public static final int action_settings=0x7f050001;
+        public static final int add_new_link_title=0x7f050009;
         public static final int app_name=0x7f050000;
         public static final int cancelornot=0x7f050008;
-        public static final int drawer_close=0x7f05000a;
-        public static final int drawer_open=0x7f050009;
+        public static final int drawer_close=0x7f05000b;
+        public static final int drawer_open=0x7f05000a;
         public static final int hello_world=0x7f050002;
         public static final int nwStateReceiver=0x7f050007;
         public static final int title_activity_custom=0x7f050004;

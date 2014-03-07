@@ -7,34 +7,40 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="match_parent" >
-
-        <ImageView
-            android:id="@+id/fileimage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:src="@drawable/ic_launcher" />
+        android:layout_height="match_parent" 
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/filename"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toLeftOf="@+id/choose"
             android:layout_toRightOf="@+id/fileimage"
             android:text="Large Text"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ImageView
+            android:id="@+id/fileimage"
+            android:layout_width="50dip"
+            android:layout_height="50dip"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/image_bg"
+            android:padding="2dp"
+            android:src="@drawable/ic_launcher" />
 
         <CheckBox
             android:id="@+id/choose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/fileimage"
-            android:focusable="false"
-            android:layout_alignParentRight="true" />
-
+            android:layout_alignParentRight="true"
+            android:focusable="false" />
     </RelativeLayout>
 
 </LinearLayout>

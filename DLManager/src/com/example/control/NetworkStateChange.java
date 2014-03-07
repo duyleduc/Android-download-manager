@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.example.activities.DownloadingFragment;
 import com.example.control.DownloadService.DownloadFileChunk;
 
 public class NetworkStateChange extends BroadcastReceiver {
@@ -16,7 +17,7 @@ public class NetworkStateChange extends BroadcastReceiver {
 
 	public NetworkStateChange(Thread thread, DownloadService dls) {
 		this.thread = thread;
-		this.dlS = dlS;
+		this.dlS = dls;
 	}
 
 	@Override
@@ -31,6 +32,7 @@ public class NetworkStateChange extends BroadcastReceiver {
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		ni = cm.getActiveNetworkInfo();
 		if (ni == null) {
+			DownloadingFragment.pauseAllFile(context);
 			if (thread != null) {
 				this.thread.interrupt();
 				this.thread = null;

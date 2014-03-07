@@ -1,9 +1,7 @@
 package com.example.activities;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,6 +11,7 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
@@ -23,15 +22,18 @@ import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.control.DownloadService;
 import com.example.database.DownloadedDB;
 import com.example.dlmanager.R;
 import com.example.model.ConstantsVars;
-import com.example.model.DownloadedFileModel;
 import com.example.model.EnumStateFile;
 import com.example.model.FileModel;
 import com.example.viewpageradapter.MyFragmentPagerAdapter;
@@ -41,15 +43,14 @@ public class MainDownloadManager extends FragmentActivity implements Runnable {
 
 	public static ArrayList<FileModel> files = new ArrayList<FileModel>();
 	public static ArrayList<FileModel> queues = new ArrayList<FileModel>();
-	public static List<DownloadedFileModel> downloaded = new ArrayList<DownloadedFileModel>();
 	public static final int MAX_FILE_ASYNC = 5;
 	public static FragmentActivity myActivity;
 	public static Menu mMenu = null;
-	public static boolean isShow;
+	public static String CACHDIR = "";
 
 	private ActionBar mActionBar;
 	private ViewPager mPager;
-	private Uri uri;
+	private String linkToDownload;
 	private long fLength;
 	private int tabCurrent;
 	private boolean norange;
@@ -60,9 +61,13 @@ public class MainDownloadManager extends FragmentActivity implements Runnable {
 		setContentView(R.layout.activity_main_download_manager);
 		createFolder();
 		initialize();
-		start();
-		myActivity = this;
+		Uri uri = getIntent().getData();
 
+		if (uri != null) {
+			linkToDownload = uri.toString();
+			start(linkToDownload);
+		}
+		myActivity = this;
 	}
 
 	@Override
@@ -71,9 +76,13 @@ public class MainDownloadManager extends FragmentActivity implements Runnable {
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+	}
+
+	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		super.onPrepareOptionsMenu(menu);
-
 		return true;
 	}
 
@@ -83,21 +92,72 @@ public class MainDownloadManager extends FragmentActivity implements Runnable {
 
 		if (MainDownloadManager.mMenu == null) {
 			MainDownloadManager.mMenu = menu;
-			isShow = false;
+
 		}
 		getMenuInflater().inflate(R.menu.main, menu);
-		mMenu.findItem(R.id.more).setVisible(isShow);
 		return true;
 	}
 
-	private void start() {
-		uri = getIntent().getData();
-		if (uri != null) {
-			if (canbeDownloaded(uri)) {
-				Thread th = new Thread(this);
-				th.start();
-			}
+	private void start(String url) {
+
+		if (canbeDownloaded(url)) {
+			Thread th = new Thread(this);
+			th.start();
 		}
+
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.delete:
+			FileBrowserFragment.deleteSelectedFile();
+			invalidateOptionsMenu();
+			return true;
+		case R.id.add_url:
+			addNewLink();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+
+		}
+	}
+
+	private void addNewLink() {
+		final Dialog add_new_link = new Dialog(this);
+
+		add_new_link.setContentView(R.layout.new_url);
+		add_new_link.setTitle(R.string.add_new_link_title);
+		final Button cancel = (Button) add_new_link
+				.findViewById(R.id.bt_cancel_dl);
+		final Button download = (Button) add_new_link
+				.findViewById(R.id.btn_download_url);
+		final EditText new_link = (EditText) add_new_link
+				.findViewById(R.id.add_new_url);
+
+		cancel.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				add_new_link.dismiss();
+
+			}
+		});
+
+		download.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				String link = new_link.getText().toString();
+				if (!link.equals("")) {
+					linkToDownload = link;
+					start(linkToDownload);
+				}
+				add_new_link.dismiss();
+
+			}
+		});
+		add_new_link.show();
 	}
 
 	/**
@@ -107,19 +167,19 @@ public class MainDownloadManager extends FragmentActivity implements Runnable {
 	 * @return true--> can download, false = exists
 	 */
 
-	private boolean canbeDownloaded(Uri uri) {
+	private boolean canbeDownloaded(String url) {
 
-		String url = uri.toString();
 		String name = url.substring(url.lastIndexOf("/") + 1);
 		for (FileModel f : MainDownloadManager.files) {
-			if (f.getfUrl().equals(uri.toString())) {
+			if (f.getfUrl().equals(url)) {
 				Toast.makeText(getApplicationContext(),
 						"This file is downloading", Toast.LENGTH_LONG).show();
 				return false;
 			}
 		}
+
 		for (FileModel f : MainDownloadManager.queues) {
-			if (f.getfUrl().equals(uri.toString())) {
+			if (f.getfUrl().equals(url)) {
 				Toast.makeText(getApplicationContext(),
 						"This file is in queue", Toast.LENGTH_LONG).show();
 				return false;
@@ -128,14 +188,13 @@ public class MainDownloadManager extends FragmentActivity implements Runnable {
 
 		File file = ConstantsVars.DLMDIR;
 		for (File fDir : file.listFiles()) {
-			if (!fDir.getName().equals(ConstantsVars.CACHDIR)) {
-				for (File f : fDir.listFiles()) {
-					if (name.equals(f.getName())) {
-						Toast.makeText(getApplicationContext(),
-								"This file is downloaded", Toast.LENGTH_LONG)
-								.show();
-						return false;
-					}
+
+			for (File f : fDir.listFiles()) {
+				if (name.equals(f.getName())) {
+					Toast.makeText(getApplicationContext(),
+							"This file is downloaded", Toast.LENGTH_LONG)
+							.show();
+					return false;
 				}
 			}
 		}
@@ -147,20 +206,16 @@ public class MainDownloadManager extends FragmentActivity implements Runnable {
 	 * start to download file
 	 */
 	private void startDownload() {
-		FileModel file = new FileModel(uri.toString(), fLength);
+
+		FileModel file = new FileModel(linkToDownload, fLength,
+				System.currentTimeMillis());
 		if (norange) {
 			file.setState(EnumStateFile.NORANGE);
 		}
 		String filePath = setPathDownloadedFile(file.getfUrl());
 		file.path = filePath;
-		try {
-			file.mRAF = new RandomAccessFile(filePath, "rw");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
 
-		if (MainDownloadManager.files.size() < MAX_FILE_ASYNC
-				&& MainDownloadManager.files.size() >= 0) {
+		if (canExecute()) {
 			MainDownloadManager.files.add(file);
 			DownloadingFragment.mAdapterD.notifyDataSetChanged();
 			int id = MainDownloadManager.files.indexOf(file);
@@ -176,6 +231,18 @@ public class MainDownloadManager extends FragmentActivity implements Runnable {
 
 	}
 
+	private boolean canExecute() {
+		int nbrDownloading = 0;
+		for (FileModel f : MainDownloadManager.files) {
+			if (f.getState() != EnumStateFile.PAUSED)
+				nbrDownloading++;
+		}
+
+		if (nbrDownloading < MAX_FILE_ASYNC)
+			return true;
+		return false;
+	}
+
 	/**
 	 * create folder for downloadmanager
 	 */
@@ -183,32 +250,29 @@ public class MainDownloadManager extends FragmentActivity implements Runnable {
 		ConstantsVars.DLMDIR = new File(Environment
 				.getExternalStorageDirectory().getPath()
 				+ ConstantsVars.DIRNAME);
-		if (!ConstantsVars.DLMDIR.exists()) {
-			ConstantsVars.DLMDIR.mkdirs();
 
-			// images
-			new File(ConstantsVars.DLMDIR.getPath() + ConstantsVars.IMDIR)
-					.mkdirs();
-			// video
-			new File(ConstantsVars.DLMDIR.getPath() + ConstantsVars.VIDDIR)
-					.mkdirs();
-			// music
-			new File(ConstantsVars.DLMDIR.getPath() + ConstantsVars.MUDIR)
-					.mkdirs();
-			// apk
-			new File(ConstantsVars.DLMDIR.getPath() + ConstantsVars.OTHERDIR)
-					.mkdirs();
-			// compressed
-			new File(ConstantsVars.DLMDIR.getPath() + ConstantsVars.COMDIR)
-					.mkdirs();
-			// document
-			new File(ConstantsVars.DLMDIR.getPath() + ConstantsVars.DOCDIR)
-					.mkdirs();
-			// cache
-			new File(ConstantsVars.DLMDIR.getPath() + ConstantsVars.CACHDIR)
-					.mkdirs();
+		ConstantsVars.DLMDIR.mkdirs();
 
-		}
+		// images
+		new File(ConstantsVars.DLMDIR.getPath() + ConstantsVars.IMDIR).mkdirs();
+		// video
+		new File(ConstantsVars.DLMDIR.getPath() + ConstantsVars.VIDDIR)
+				.mkdirs();
+		// music
+		new File(ConstantsVars.DLMDIR.getPath() + ConstantsVars.MUDIR).mkdirs();
+		// apk
+		new File(ConstantsVars.DLMDIR.getPath() + ConstantsVars.OTHERDIR)
+				.mkdirs();
+		// compressed
+		new File(ConstantsVars.DLMDIR.getPath() + ConstantsVars.COMDIR)
+				.mkdirs();
+		// document
+		new File(ConstantsVars.DLMDIR.getPath() + ConstantsVars.DOCDIR)
+				.mkdirs();
+		// cache
+		CACHDIR = ConstantsVars.DLMDIR.getPath() + "/.cache";
+		new File(CACHDIR).mkdir();
+
 	}
 
 	@SuppressLint("NewApi")
@@ -237,20 +301,18 @@ public class MainDownloadManager extends FragmentActivity implements Runnable {
 
 			@Override
 			public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void onTabSelected(Tab tab, FragmentTransaction ft) {
-				// TODO Auto-generated method stub
+
 				tabCurrent = tab.getPosition();
 				mPager.setCurrentItem(tabCurrent);
 			}
 
 			@Override
 			public void onTabReselected(Tab tab, FragmentTransaction ft) {
-				// TODO Auto-generated method stub
 
 			}
 		};
@@ -260,13 +322,27 @@ public class MainDownloadManager extends FragmentActivity implements Runnable {
 
 		mActionBar.addTab(tab);
 
-		tab = mActionBar.newTab().setText("History")
-				.setTabListener(tabListener);
-		mActionBar.addTab(tab);
+		getPausedFileFromDB();
 
-		getDownloadedFileFromDB();
 		tab = mActionBar.newTab().setText("Files").setTabListener(tabListener);
 		mActionBar.addTab(tab);
+
+	}
+
+	private void getPausedFileFromDB() {
+
+		List<FileModel> f = DownloadedDB.getInstance(getApplicationContext())
+				.queryPausedFiles();
+
+		for (FileModel fi : f) {
+			boolean canInsert = true;
+			for (FileModel fm : MainDownloadManager.files) {
+				if (fi.getId() == fm.getId())
+					canInsert = false;
+			}
+			if (canInsert)
+				MainDownloadManager.files.add(fi);
+		}
 
 	}
 
@@ -274,29 +350,22 @@ public class MainDownloadManager extends FragmentActivity implements Runnable {
 	 * get all downloaded file from bd to fetch to history
 	 */
 
-	private void getDownloadedFileFromDB() {
-		ArrayList<DownloadedFileModel> dl = new ArrayList<DownloadedFileModel>();
-		dl = DownloadedDB.getInstance(this).queryDownloadedFile();
-		MainDownloadManager.downloaded.clear();
-		MainDownloadManager.downloaded.addAll(dl);
-	}
-
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
 
 		try {
-			URL url = new URL(uri.toString());
+			URL url = new URL(linkToDownload);
 			HttpURLConnection connection = (HttpURLConnection) url
 					.openConnection();
 			connection.connect();
 			final String contentLengthStr = connection
 					.getHeaderField("content-length");
 
-			final String rangeLength = connection
-					.getHeaderField("Accept-Ranges");
+			String rangeLength = "";
+			rangeLength = connection.getHeaderField("Accept-Ranges");
 
-			if (rangeLength != null) {
+			if (rangeLength == null || !rangeLength.equals("bytes")) {
 				norange = true;
 			} else {
 				norange = false;
@@ -324,8 +393,8 @@ public class MainDownloadManager extends FragmentActivity implements Runnable {
 		@Override
 		public void handleMessage(Message msg) {
 			if (fLength <= 0) {
-				String fname = uri.toString().substring(
-						uri.toString().lastIndexOf("/") + 1);
+				String fname = linkToDownload.substring(linkToDownload
+						.lastIndexOf("/") + 1);
 				Toast.makeText(getApplicationContext(),
 						fname + " can't download", Toast.LENGTH_LONG).show();
 			} else {
@@ -364,11 +433,10 @@ public class MainDownloadManager extends FragmentActivity implements Runnable {
 
 	@Override
 	public void onBackPressed() {
-		if (tabCurrent == 2) {
-			if (!FileBrowserFragment.onBackPressed()) {
-				finish();
-			}
+		if (tabCurrent == 1) {
+			FileBrowserFragment.onBackPressed();
 		} else {
+
 			finish();
 		}
 	}

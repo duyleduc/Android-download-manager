@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -16,14 +15,13 @@ import com.example.model.FileModel;
 
 public class DownloadingLVAdapter extends ArrayAdapter<FileModel> {
 
-	private ArrayList<FileModel> listFiles;
 	private int resource;
 	private Holder holder;
 
 	public DownloadingLVAdapter(Context context, int resource,
 			ArrayList<FileModel> listFiles) {
 		super(context, resource, listFiles);
-		this.listFiles = listFiles;
+
 		this.resource = resource;
 	}
 
@@ -34,8 +32,6 @@ public class DownloadingLVAdapter extends ArrayAdapter<FileModel> {
 					this.resource, null);
 			holder = new Holder();
 
-			holder.ivFileType = (ImageView) convertView
-					.findViewById(R.id.image_view_filetype);
 			holder.pbDowloading = (ProgressBar) convertView
 					.findViewById(R.id.propressbar_download);
 			holder.tvFileName = (TextView) convertView
@@ -80,7 +76,6 @@ public class DownloadingLVAdapter extends ArrayAdapter<FileModel> {
 	}
 
 	private class Holder {
-		public ImageView ivFileType;
 		public ProgressBar pbDowloading;
 		public TextView tvFileName;
 		public TextView tvStatus;

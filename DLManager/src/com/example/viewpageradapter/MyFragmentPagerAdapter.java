@@ -5,14 +5,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.example.activities.DownloadedFragment;
 import com.example.activities.DownloadingFragment;
 import com.example.activities.FileBrowserFragment;
 
 
 public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 
-	final int PAGE_COUNT = 3;
+	final int PAGE_COUNT = 2;
 
 	/** Constructor of the class */
 	public MyFragmentPagerAdapter(FragmentManager fm) {
@@ -30,12 +29,12 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
 			DownloadingFragment dl = new DownloadingFragment();
 			dl.setArguments(data);
 			return dl;
-
+//
+//		case 1:
+//			DownloadedFragment dled = new DownloadedFragment();
+//			dled.setArguments(data);
+//			return dled;
 		case 1:
-			DownloadedFragment dled = new DownloadedFragment();
-			dled.setArguments(data);
-			return dled;
-		case 2:
 			FileBrowserFragment fbf = new FileBrowserFragment();
 			fbf.setArguments(data);
 			return fbf;

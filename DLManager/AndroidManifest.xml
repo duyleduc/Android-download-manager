@@ -25,6 +25,7 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
                 <data android:mimeType="*/*" />
@@ -33,7 +34,8 @@
 
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="com.example.intentdemo.LAUNCH" />
-
+	
+                <category android:name="android.intent.category.BROWSABLE"/>
                 <category android:name="android.intent.category.APP_BROWSER" />
                 <category android:name="android.intent.category.DEFAULT" />
 

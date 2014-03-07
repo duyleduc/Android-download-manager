@@ -6,17 +6,20 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_weight="1.04" >
 
-        <ImageView
-            android:id="@+id/image_view_filetype"
+        <TextView
+            android:id="@+id/file_downloading_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
+            android:layout_below="@+id/filename_downloading"
+            android:layout_marginLeft="16dp"
+            android:layout_toRightOf="@+id/download_status"
             android:clickable="false"
             android:focusable="false"
-            android:src="@drawable/ic_launcher" />
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <ProgressBar
             android:id="@+id/propressbar_download"
@@ -25,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/image_view_filetype"
+            android:layout_below="@+id/download_status"
             android:clickable="false"
             android:focusable="false" />
 
@@ -33,8 +36,9 @@
             android:id="@+id/filename_downloading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/image_view_filetype"
+            android:layout_marginLeft="14dp"
             android:clickable="false"
             android:focusable="false"
             android:text="Medium Text"
@@ -44,24 +48,13 @@
             android:id="@+id/download_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/propressbar_download"
+            android:layout_alignBottom="@+id/file_downloading_size"
             android:layout_alignLeft="@+id/filename_downloading"
             android:clickable="false"
             android:focusable="false"
             android:text="Small Text"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
-        <TextView
-            android:id="@+id/file_downloading_size"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/download_status"
-            android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@+id/download_status"
-            android:clickable="false"
-            android:focusable="false"
-            android:text="Medium Text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
     </RelativeLayout>
 
 </LinearLayout>

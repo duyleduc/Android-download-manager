@@ -1,26 +1,23 @@
 package com.example.model;
 
-import java.io.Serializable;
 
-public class ChunkFileModel implements Serializable {
+public class ChunkFileModel {
+	
 	private FileModel file;
 	private String path;
 	private long begin; // point begining download
 	private EnumStateFile state;
-	private long size;
+	private long end;
 	private long downloadedSize;
-	
 
 	public ChunkFileModel(FileModel file, String id, long startPos,
-			EnumStateFile state, long blockSize) {
+			EnumStateFile state, long end) {
 		super();
 		this.file = file;
 		this.path = id;
 		this.begin = startPos;
 		this.state = state;
-
-		this.size = blockSize;
-
+		this.end = end;
 	}
 
 	/**
@@ -61,11 +58,11 @@ public class ChunkFileModel implements Serializable {
 	}
 
 	/**
-	 * @param begin
+	 * @param l
 	 *            the begin to set
 	 */
-	public void setBegin(int begin) {
-		this.begin = begin;
+	public void setBegin(long l) {
+		this.begin = l;
 	}
 
 	/**
@@ -86,16 +83,16 @@ public class ChunkFileModel implements Serializable {
 	/**
 	 * @return the length
 	 */
-	public long getSizeChunk() {
-		return size;
+	public long getEnd() {
+		return this.end;
 	}
 
 	/**
-	 * @param length
+	 * @param l
 	 *            the length to set
 	 */
-	public void setLength(int length) {
-		this.size = length;
+	public void setEnd(long end) {
+		this.end = end;
 	}
 
 	/**

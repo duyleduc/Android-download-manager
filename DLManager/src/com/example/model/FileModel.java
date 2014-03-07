@@ -1,6 +1,5 @@
 package com.example.model;
 
-import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,12 +13,12 @@ public class FileModel {
 	private List<ChunkFileModel> parts;
 	private long downloadedLenght;
 	private String percentDownloaded;
-	
-	public RandomAccessFile mRAF;
+	private long id;
+	private long fTimestamp;
 	public String path;
 	public DownloadService dlService;
 
-	public FileModel(String fUrl, long fLength) {
+	public FileModel(String fUrl, long fLength, long timestamp) {
 		super();
 		state = EnumStateFile.DOWNLOADING;
 		this.fUrl = fUrl;
@@ -27,10 +26,11 @@ public class FileModel {
 		this.parts = new ArrayList<ChunkFileModel>();
 		this.downloadedLenght = 0;
 		this.percentDownloaded = "0%";
+		id = -1;
+		this.fTimestamp = timestamp;
 	}
 
 	public FileModel() {
-		// TODO Auto-generated constructor stub
 		this.parts = new ArrayList<ChunkFileModel>();
 	}
 
@@ -115,6 +115,36 @@ public class FileModel {
 	 */
 	public void setPercentDownloaded(String percentDownloaded) {
 		this.percentDownloaded = percentDownloaded;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the fTimestamp
+	 */
+	public long getfTimestamp() {
+		return fTimestamp;
+	}
+
+	/**
+	 * @param fTimestamp
+	 *            the fTimestamp to set
+	 */
+	public void setfTimestamp(long fTimestamp) {
+		this.fTimestamp = fTimestamp;
 	}
 
 }

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.example.dlmanager.R;
+
 public class ConstantsVars { // constant values using in this project
 	// directories
 	public static File DLMDIR;
@@ -15,10 +17,11 @@ public class ConstantsVars { // constant values using in this project
 	public final static String OTHERDIR = "/other";
 	public final static String COMDIR = "/compressed";
 	public final static String DOCDIR = "/document";
-	public final static String CACHDIR = "/cache";
+
 	public final static int PART = 1024 * 1024 / 2;
 	public final static int PARTS_4 = 1024 * 1024 * 2;
 	public final static int PARTS_8 = 1024 * 1024 * 20;
+	@SuppressWarnings("serial")
 	public static HashMap<String, String> listApplication = new HashMap<String, String>() {
 		{
 			/**
@@ -80,6 +83,7 @@ public class ConstantsVars { // constant values using in this project
 			add("PNG");
 			add("JPG");
 			add("GIF");
+			add("BMP");
 		}
 	};
 
@@ -93,6 +97,7 @@ public class ConstantsVars { // constant values using in this project
 			add("ZIP");
 			add("RAR");
 			add("7Z");
+			add("JAR");
 		}
 	};
 
@@ -122,6 +127,8 @@ public class ConstantsVars { // constant values using in this project
 			add("FLAC");
 			add("MID");
 			add("WAV");
+			add("MIDI");
+			add("ARM");
 		}
 	};
 
@@ -137,6 +144,14 @@ public class ConstantsVars { // constant values using in this project
 			add("DOCX");
 			add("XLS");
 			add("XLXS");
+			add("PHP");
+			add("XML");
+			add("HTML");
+			add("PY");
+			add("TXT");
+			add("CVS");
+			add("SQL");
+			add("PPT");
 		}
 	};
 
@@ -180,7 +195,7 @@ public class ConstantsVars { // constant values using in this project
 	public static final String DB_TABLE_PFILE = "pausedfile";
 	public static final String ID_FILE = "id_file";
 	public static final String ID_CHUNK = "id_chunk";
-	public static final String CHUNK_SIZE = "chunk_size";
+	public static final String DL_END = "dl_end";
 	public static final String DL_LENGTH = "dl_length";
 	public static final String DL_BG = "dl_bg";
 
@@ -193,9 +208,44 @@ public class ConstantsVars { // constant values using in this project
 			+ " integer not null,"
 			+ ID_CHUNK
 			+ " text not null,"
-			+ CHUNK_SIZE
+			+ DL_END
 			+ " integer not null,"
 			+ DL_LENGTH
-			+ " integer not null," + DL_BG + " integer not null);";
+			+ " integer not null,"
+			+ DL_BG + " integer not null,"+FSTATE+" text not null);";
+
+	public static int setIcon(String extension) {
+
+		if (extension.equals("folder")) {
+			return R.drawable.ic_folder;
+		}
+
+		if (extension.equals("PDF")) {
+			return R.drawable.ic_pdf;
+		}
+
+		if (DOC_TYPE.contains(extension)) {
+			return R.drawable.ic_text;
+		}
+
+		if (IMAGE_TYPE.contains(extension)) {
+			return R.drawable.ic_image;
+		}
+
+		if (MUSIC_TYPE.contains(extension)) {
+			return R.drawable.ic_music;
+		}
+
+		if (VIDEO_TYPE.contains(extension)) {
+			return R.drawable.ic_video;
+		}
+
+		if (COMPRESSED.contains(extension)) {
+			return R.drawable.ic_compressed;
+		}
+
+		return R.drawable.ic_other;
+
+	}
 
 }

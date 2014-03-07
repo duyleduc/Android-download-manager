@@ -10,7 +10,7 @@
     <string name="title_queue">Queue</string>
     <string name="nwStateReceiver">NetworkStateReceiver</string>
     <string name="cancelornot">Do you want to cancel?</string>
-
+	<string name = "add_new_link_title">Add new download</string>
     <string-array name="operating_systems">
         <item>Android</item>
         <item>iPhone</item>

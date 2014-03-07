@@ -1,7 +1,7 @@
 package com.example.model;
 
 public class DownloadedFileModel {
-	private int fId;
+	private long fId;
 	private String fName;
 	private String fLink;
 	private long fTimestamp;
@@ -21,22 +21,21 @@ public class DownloadedFileModel {
 	}
 
 	public DownloadedFileModel() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
 	 * @return the fId
 	 */
-	public int getfId() {
+	public long getfId() {
 		return fId;
 	}
 
 	/**
-	 * @param fId
+	 * @param l
 	 *            the fId to set
 	 */
-	public void setfId(int fId) {
-		this.fId = fId;
+	public void setfId(long l) {
+		this.fId =  l;
 	}
 
 	/**

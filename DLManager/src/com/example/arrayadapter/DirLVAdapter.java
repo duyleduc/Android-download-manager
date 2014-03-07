@@ -2,6 +2,7 @@ package com.example.arrayadapter;
 
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +15,10 @@ import android.widget.TextView;
 
 import com.example.activities.MainDownloadManager;
 import com.example.dlmanager.R;
+import com.example.model.ConstantsVars;
 import com.example.model.Files;
 
+@SuppressLint("NewApi")
 public class DirLVAdapter extends ArrayAdapter<Files> {
 
 	private List<Files> listFiles;
@@ -51,6 +54,21 @@ public class DirLVAdapter extends ArrayAdapter<Files> {
 			CheckBox cb = (CheckBox) convertView.findViewById(R.id.choose);
 			cb.setVisibility(View.INVISIBLE);
 		}
+
+		String extension = file.getFile().getName()
+				.substring(file.getFile().getName().lastIndexOf(".") + 1)
+				.toUpperCase();
+
+		if (file.getFile().isDirectory()) {
+			extension = "folder";
+		}
+
+		if (ConstantsVars.IMAGE_TYPE.contains(extension)) {
+			holder.ivFileType.setImageBitmap(file.getAvatar());
+		} else {
+			holder.ivFileType
+					.setImageResource(ConstantsVars.setIcon(extension));
+		}
 		holder.tvFileName.setText(file.getFile().getName());
 		holder.cbCheck.setChecked(file.isChecked());
 		holder.cbCheck.setTag(file);
@@ -62,19 +80,6 @@ public class DirLVAdapter extends ArrayAdapter<Files> {
 				CheckBox v = (CheckBox) arg0;
 				Files f = (Files) arg0.getTag();
 				f.setChecked(v.isChecked());
-				if (nbrChecked() == 0) {
-					MainDownloadManager.isShow = false;
-					MainDownloadManager.myActivity.invalidateOptionsMenu();
-					// MainDownloadManager.mMenu.findItem(R.id.more).setVisible(
-					// false);
-				} else {
-					MainDownloadManager.isShow = true;
-					MainDownloadManager.myActivity.invalidateOptionsMenu();
-					// MainDownloadManager.mMenu.findItem(R.id.more).setVisible(
-					// true);
-
-				}
-
 			}
 		});
 
